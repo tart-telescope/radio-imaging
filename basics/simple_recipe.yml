@@ -1,0 +1,99 @@
+#!/usr/bin/env -S stimela run -l
+# This basic TART Stimela 2.0 processing pipeline
+opts:
+    log:
+        dir: logs/log-{config.run.datetime}
+        name: log-{info.fqname}
+        nest: 2
+        symlink: log
+
+_include:
+    - (tartcargo):
+        - tart2ms.yml
+        - tart-download-data.yml
+        - disko.yml
+        - spotless.yml
+        - disko-draw.yml
+
+tart-image:
+    info: TART imaging using stimela
+
+    inputs:
+        tart:
+            dtype: str
+            required: true
+            info: "TART name (e.g. mu-udm)"
+
+    outputs:
+        ms:
+            dtype: MS
+            default:  '{current.tart}.ms'
+        hdf:
+            dtype: File
+            default: '{current.tart}-vis.hdf'
+        svg:
+            dtype: File
+            default: '{current.tart}.svg'
+
+    assign:
+        api: 'https://api.elec.ac.nz/tart/{recipe.tart}'
+
+    steps:
+        download-hdf:
+            cab: tart-download-data
+            skip: =EXISTS(recipe.hdf)
+            params:
+                api: =recipe.api
+                vis: true
+                file: =recipe.hdf
+
+        create-ms:
+            cab: tart2ms
+            skip: =EXISTS(recipe.ms)
+            params:
+                hdf: =steps.download-hdf.file
+                ms: =recipe.ms
+                clobber: true
+                single-field: true
+                rephase: obs-midpoint
+
+        spotless-image:
+            cab: spotless
+            params:
+                ms: =recipe.ms
+                HDF: ='{recipe.tart}-spotless.sphere'
+                nvis: 10000
+                multimodel: true
+                healpix: true
+                fov: 170deg
+                res: 0.5deg
+
+        spotless-draw:
+            cab: disko-draw
+            params:
+                hdf: ='{recipe.tart}-spotless.sphere'
+                show-sources: true
+                scale-mad: true
+                SVG: ='spotless-{recipe.svg}'
+
+        disko-image:
+            cab: disko
+            params:
+                ms: =recipe.ms
+                HDF: ='{recipe.tart}-disko.sphere'
+                nvis: 10000
+                healpix: true
+                fov: 170deg
+                res: 0.5deg
+                lasso: true
+                alpha: 0.006
+                l1-ratio: 0.02
+
+        disko-draw:
+            cab: disko-draw
+            params:
+                hdf: ='{recipe.tart}-disko.sphere'
+                show-sources: true
+                scale-mad: true
+                SVG: ='disko-{recipe.svg}'
+

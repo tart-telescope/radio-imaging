@@ -1,0 +1,11 @@
+.tartcache
+*.deps
+*.log
+*.ms
+*.txt
+*.full
+logs/**
+data**
+*.hdf
+*.json
+*.sphere
