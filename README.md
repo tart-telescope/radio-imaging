@@ -1,6 +1,6 @@
-# radio-imaging
+# Basic Radio Telescope imaging and Calibration
 
-Radio Telescope Imaging using both tart_cargo and CASA in the stimela radio imaging environment.
+Radio Telescope Imaging using both tart_cargo and CASA in the stimela radio imaging environment. This material is focused on using data from the [TART radio telescope](https://tart.elec.ac.nz).
 
 ## TART imaging basics
 

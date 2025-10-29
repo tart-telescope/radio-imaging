@@ -24,9 +24,32 @@ sudo apt-get install -y \
 echo "Installing gocryptfs..."
 sudo apt-get install -y gocryptfs || echo "gocryptfs not available in repos, skipping..."
 
-sudo add-apt-repository -y ppa:apptainer/ppa
-sudo apt update
-sudo apt install -y apptainer-suid
+
+# Determine architecture
+ARCH=$(dpkg --print-architecture)
+echo "Detected architecture: $ARCH"
+
+# Download and install apptainer
+echo "Installing Apptainer..."
+APPTAINER_VERSION="1.3.4"
+
+if [ "$ARCH" = "amd64" ]; then
+    APPTAINER_DEB="apptainer_${APPTAINER_VERSION}_amd64.deb"
+    APPTAINER_SUID_DEB="apptainer-suid_${APPTAINER_VERSION}_amd64.deb"
+elif [ "$ARCH" = "arm64" ]; then
+    APPTAINER_DEB="apptainer_${APPTAINER_VERSION}_arm64.deb"
+    APPTAINER_SUID_DEB="apptainer-suid_${APPTAINER_VERSION}_arm64.deb"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
+
+wget -q "https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VERSION}/${APPTAINER_DEB}" -O /tmp/apptainer.deb
+sudo apt-get install -y /tmp/apptainer.deb
+rm /tmp/apptainer.deb
+
+wget -q "https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VERSION}/${APPTAINER_SUID_DEB}" -O /tmp/apptainer_suid.deb
+sudo dpkg -i ./apptainer_suid.deb
 
 # Verify apptainer installation
 echo "Verifying Apptainer installation..."
