@@ -127,19 +127,19 @@ tart-image:
         updateobservatory:
           cab: update-observatory-name
           params:
-            vis: =recipe.ms
+            ms: =recipe.ms
 
         flagsave:
             cab: casa.flagman
             params:
-                vis: =recipe.ms
+                ms: =recipe.ms
                 mode: 'save'
                 versionname: 'ORIGINAL'
 
         plotuv:
             cab: casa.plotms
             params:
-              vis: =recipe.ms
+              ms: =recipe.ms
               xaxis: 'U'
               yaxis: 'V'
               overwrite: true
@@ -148,19 +148,19 @@ tart-image:
         plotants:
             cab: casa.plotants
             params:
-              vis: =recipe.ms
+              ms: =recipe.ms
               figfile: '{recipe.msdir}/antconfig.png'
 
         lister:
             cab: casa.listobs
             params:
               verbose: false
-              vis: =recipe.ms
+              ms: =recipe.ms
 
         calibrate_amplitude:
             cab: casa.gaincal
             params:
-              vis: =recipe.ms
+              ms: =recipe.ms
               caltable: "{recipe.cal_table_dir}/tart.G0a"
               gaintype: G
               calmode: a
@@ -180,7 +180,7 @@ tart-image:
         calibrate_phase:
             cab: casa.gaincal
             params:
-              vis: =recipe.ms
+              ms: =recipe.ms
               caltable: "{recipe.cal_table_dir}/tart.G0p"
               gaintype: G
               gaintable: 
@@ -203,12 +203,12 @@ tart-image:
                 #   flagfaults:
                 #       cab: casa.flagdata
                 #       params:
-                #         vis: =recipe.ms
+                #         ms: =recipe.ms
                 #         antenna: '6'
         applycal:
             cab: casa.applycal
             params:
-              vis: =recipe.ms
+              ms: =recipe.ms
               gaintable:
                 - =steps.calibrate_amplitude.caltable
                 - =steps.calibrate_phase.caltable
