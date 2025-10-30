@@ -1,5 +1,7 @@
 *.txt
 *.deps
+*.log
+*.full
 rawdata
 msdir
 img
