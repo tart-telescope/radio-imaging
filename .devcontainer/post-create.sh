@@ -66,10 +66,13 @@ source ./venv/bin/activate
 pip install tart-cargo
 pip install cult-cargo
 
+
+echo "Preloading singularity images"
+
 stimela build basics/simple_recipe.yml
 stimela build casa/tart_dl.yml
 
-echo "Preloading singularity images"
+deactivate
 
 echo "================================================"
 echo "Setup complete! You can now use tart-cargo."
