@@ -164,6 +164,7 @@ tart-image:
               caltable: "{recipe.cal_table_dir}/tart.G0a"
               gaintype: G
               calmode: a
+              refant: 0
               minsnr: 1.0e-10
               solnorm: true
               solint: 300s
@@ -186,6 +187,7 @@ tart-image:
               gaintable: 
                 - =steps.calibrate_amplitude.caltable
               calmode: p
+              refant: 0
               minsnr: 1.0e-10
               solint: 10s
 
