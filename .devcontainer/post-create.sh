@@ -68,8 +68,8 @@ pip install cult-cargo
 
 echo "Preloading singularity images"
 
-stimela build basics/simple_recipe.yml
-stimela build casa/tart_dl.yml
+stimela build ./basics/simple_recipe.yml
+stimela build ./casa/tart_dl.yml
 
 deactivate
 
