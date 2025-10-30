@@ -49,7 +49,8 @@ sudo apt-get install -y /tmp/apptainer.deb
 rm /tmp/apptainer.deb
 
 wget -q "https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VERSION}/${APPTAINER_SUID_DEB}" -O /tmp/apptainer_suid.deb
-sudo dpkg -i ./apptainer_suid.deb
+sudo apt-get install -y /tmp/apptainer_suid.deb
+rm /tmp/apptainer_suid.deb
 
 # Verify apptainer installation
 echo "Verifying Apptainer installation..."
