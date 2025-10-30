@@ -56,6 +56,10 @@ rm /tmp/apptainer_suid.deb
 echo "Verifying Apptainer installation..."
 apptainer --version
 
+# Required for casa plotms
+
+mkdir -p /run/user
+
 # Upgrade pip
 
 python -m venv venv
