@@ -57,12 +57,11 @@ echo "Verifying Apptainer installation..."
 apptainer --version
 
 # Upgrade pip
-echo "Upgrading pip..."
-python -m pip install --upgrade pip
 
 python -m venv venv
 source ./venv/bin/activate
 
+pip install --upgrade pip
 pip install tart-cargo
 pip install cult-cargo
 
