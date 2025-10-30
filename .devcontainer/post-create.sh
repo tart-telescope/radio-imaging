@@ -57,8 +57,7 @@ echo "Verifying Apptainer installation..."
 apptainer --version
 
 # Required for casa plotms
-
-mkdir -p /run/user
+sudo mkdir -p /run/user
 
 # Upgrade pip
 
