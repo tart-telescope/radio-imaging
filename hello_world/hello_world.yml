@@ -1,0 +1,10 @@
+cabs:
+    greeter:
+        info: Prints "Hello World"
+        flavour: python-code
+        command: print("Hello world!")
+
+hello:
+    steps:
+        ola:
+            cab: greeter
