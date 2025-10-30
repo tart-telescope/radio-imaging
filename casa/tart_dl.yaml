@@ -41,7 +41,7 @@ cabs:
           #name: casa6
       command: |
         from casacore.tables import taql
-        taql(f"UPDATE {vis}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'") 
+        taql(f"UPDATE {ms}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'")
 
       inputs:
         vis: 
@@ -171,7 +171,7 @@ tart-image:
         plotcaltable_amp:
             cab: casa.plotms
             params:
-              vis: =steps.calibrate_amplitude.caltable
+              ms: =steps.calibrate_amplitude.caltable
               xaxis: 'antenna1'
               yaxis: 'gainamp'
               overwrite: true
@@ -192,7 +192,7 @@ tart-image:
         plotcaltable_phase:
             cab: casa.plotms
             params:
-              vis: =steps.calibrate_phase.caltable
+              ms: =steps.calibrate_phase.caltable
               xaxis: 'time'
               yaxis: 'gainphase'
               overwrite: true
