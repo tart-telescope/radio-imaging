@@ -44,7 +44,7 @@ cabs:
         taql(f"UPDATE {ms}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'")
 
       inputs:
-        vis: 
+        ms:
           dtype: MS
           must_exist: true
           info: "Measurement set name"
