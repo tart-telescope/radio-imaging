@@ -1,20 +1,5 @@
 #!/usr/bin/env -S stimela run -l
 # This basic TART Stimela 2.0 processing pipeline
-opts:
-    log:
-        dir: logs/log-{config.run.datetime}
-        name: log-{info.fqname}
-        nest: 2
-        symlink: log
-    backend:
-         #select: native
-         select: singularity
-         singularity:      
-            auto_build: true
-            rebuild: false
-            executable: /usr/bin/singularity
-            remote_only: false
-
 
 _include:
     - (tartcargo):
@@ -24,7 +9,16 @@ _include:
         - disko-draw.yml
     - (cultcargo):
         - wsclean.yml
-    - casacabs.yaml
+        - casa:
+            - flag.yml
+            - listobs.yml
+            - bandpass.yml
+            - calibration.yml
+            - split.yml
+            - setjy.yml
+            - plotms.yml
+            - clearcal.yml
+            - mstransform.yml
 
 cabs:
   mkdir:
