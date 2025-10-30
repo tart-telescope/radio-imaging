@@ -17,6 +17,7 @@ _include:
             - split.yml
             - setjy.yml
             - plotms.yml
+            - plotants.yml
             - clearcal.yml
             - mstransform.yml
 
