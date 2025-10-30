@@ -12,14 +12,9 @@ _include:
         - casa:
             - flag.yml
             - listobs.yml
-            - bandpass.yml
             - calibration.yml
-            - split.yml
-            - setjy.yml
             - plotms.yml
             - plotants.yml
-            - clearcal.yml
-            - mstransform.yml
 
 cabs:
   mkdir:
