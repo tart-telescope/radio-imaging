@@ -1,0 +1,240 @@
+#!/usr/bin/env -S stimela run -l
+# This basic TART Stimela 2.0 processing pipeline
+opts:
+    log:
+        dir: logs/log-{config.run.datetime}
+        name: log-{info.fqname}
+        nest: 2
+        symlink: log
+    backend:
+         #select: native
+         select: singularity
+         singularity:      
+            auto_build: true
+            rebuild: false
+            executable: /usr/bin/singularity
+            remote_only: false
+
+
+_include:
+    - (tartcargo):
+        - tart2ms.yml
+        - tart-download-data.yml
+        - disko.yml
+        - disko-draw.yml
+    - (cultcargo):
+        - wsclean.yml
+    - casacabs.yaml
+
+cabs:
+  mkdir:
+    command: /bin/mkdir -p 
+    inputs:
+      dirname:
+        dtype: Directory
+        must_exist: false
+        policies:
+          positional: true
+        info: "Directory name"
+
+  update-observatory-name:
+      flavour: 
+        kind: python-code
+        interpreter_binary: python3
+          #image:
+          #_use: vars.cult-cargo.images
+          #name: casa6
+      command: |
+        from casacore.tables import taql
+        taql(f"UPDATE {vis}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'") 
+
+      inputs:
+        vis: 
+          dtype: MS
+          must_exist: true
+          info: "Measurement set name"
+
+
+tart-image:
+    info: TART calibration and imaging using stimela
+
+    inputs:
+        tart:
+            dtype: str
+            required: true
+            info: "TART name (e.g. mu-udm)"
+        imgdir:
+          dtype: str
+          default: img
+        h5dir:
+          dtype: str
+          default: rawdata
+        raw_data_nfile:
+          dtype: str
+          default: 10 # can be negative e.g. -30 to make this pause and actively download for 30 mins at curent accumulation rates set on TARTs
+        cal_table_dir:
+          dtype: str
+          default: caltables
+        msdir:
+          dtype: str
+          default: msdir
+        do_download:
+          dtype: bool
+          default: false
+
+    outputs:
+        ms:
+          dtype: MS
+          default:  '{current.msdir}/{current.tart}.ms'
+
+    assign:
+        api: 'https://api.elec.ac.nz/tart/{recipe.tart}'
+
+
+    steps:
+        initimgdir:
+          cab: mkdir
+          params:
+            dirname: =recipe.imgdir
+        initdatadownloaddir:
+          cab: mkdir
+          params:
+            dirname: =recipe.h5dir
+        initdatacaltabledir:
+          cab: mkdir
+          params:
+            dirname: =recipe.cal_table_dir
+        initmsdir:
+          cab: mkdir
+          params:
+            dirname: =recipe.msdir
+        download-hdf:
+            cab: tart-download-data
+            params:
+                api: =recipe.api
+                vis: true
+                n: =recipe.raw_data_nfile
+                dir: =recipe.h5dir
+            skip: =recipe.do_download!=true
+        create-ms:
+            cab: tart2ms
+            params:
+               hdf: =GLOB('{recipe.h5dir}/*.hdf')
+               ms: =recipe.ms
+               clobber: true
+               rephase: obs-midpoint
+               add-model: true
+               uncalibrated: false
+               skip-celestial-source-catalog: true
+               write-model-catalog: true
+               model-catalog-name-prefix: =recipe.msdir + "/model_sources_"
+
+        updateobservatory:
+          cab: update-observatory-name
+          params:
+            vis: =recipe.ms
+
+        flagsave:
+            cab: casa.flagmanager
+            params:
+                vis: =recipe.ms
+                mode: 'save'
+                versionname: 'ORIGINAL'
+
+        plotuv:
+            cab: casa.plotms
+            params:
+              vis: =recipe.ms
+              xaxis: 'U'
+              yaxis: 'V'
+              overwrite: true
+              plotfile: '{recipe.msdir}/UV.png'
+
+        plotants:
+            cab: casa.plotants
+            params:
+              vis: =recipe.ms
+              figfile: '{recipe.msdir}/antconfig.png'
+
+        lister:
+            cab: casa.listobs
+            params:
+              verbose: false
+              vis: =recipe.ms
+
+        calibrate_amplitude:
+            cab: casa.gaincal
+            params:
+              vis: =recipe.ms
+              caltable: "{recipe.cal_table_dir}/tart.G0a"
+              gaintype: G
+              calmode: a
+              minsnr: 1.0e-10
+              solnorm: true
+              solint: 300s
+
+        plotcaltable_amp:
+            cab: casa.plotms
+            params:
+              vis: =steps.calibrate_amplitude.caltable
+              xaxis: 'antenna1'
+              yaxis: 'gainamp'
+              overwrite: true
+              plotfile: '{recipe.cal_table_dir}/gainamp.tart.png'
+
+        calibrate_phase:
+            cab: casa.gaincal
+            params:
+              vis: =recipe.ms
+              caltable: "{recipe.cal_table_dir}/tart.G0p"
+              gaintype: G
+              gaintable: 
+                - =steps.calibrate_amplitude.caltable
+              calmode: p
+              minsnr: 1.0e-10
+              solint: 10s
+
+        plotcaltable_phase:
+            cab: casa.plotms
+            params:
+              vis: =steps.calibrate_phase.caltable
+              xaxis: 'time'
+              yaxis: 'gainphase'
+              overwrite: true
+              plotfile: '{recipe.cal_table_dir}/gainphase.tart.png'
+              iteraxis: 'antenna'
+              exprange: 'all'
+
+                #   flagfaults:
+                #       cab: casa.flagdata
+                #       params:
+                #         vis: =recipe.ms
+                #         antenna: '6'
+        applycal:
+            cab: casa.applycal
+            params:
+              vis: =recipe.ms
+              gaintable:
+                - =steps.calibrate_amplitude.caltable
+                - =steps.calibrate_phase.caltable
+              flagbackup: true
+                #calwt: [false,false]
+
+        snapshotimage:
+            cab: wsclean      
+            params:
+              ms: =recipe.ms
+              prefix: '{recipe.imgdir}/{recipe.tart}'
+              temp-dir: '.'
+              size: 1024        
+              scale: 600asec
+              column: CORRECTED_DATA
+              nchan: 1
+              pol: RR
+              weight: briggs 0.0
+              intervals-out: 70
+              gain: 0.1
+              mgain: 0.95
+              niter: 5000
+              auto-mask: 5
+              no-update-model-required: true
