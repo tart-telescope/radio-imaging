@@ -2,6 +2,12 @@
 
 Radio Telescope Imaging using both tart_cargo and CASA in the stimela radio imaging environment. This material is focused on using data from the [TART radio telescope](https://tart.elec.ac.nz).
 
+## IMPORTANT: Activate the virtual environment
+
+First step that needs to be done only once:  (do it in the default directory /workspaces/radio-imaging)
+
+    source ./venv/bin/activate
+
 ## TART imaging basics
 
 This is a tutorial that uses tart_cargo to download some data and create images. Files for this tutorial belong in
