@@ -27,23 +27,6 @@ cabs:
           positional: true
         info: "Directory name"
 
-  update-observatory-name:
-      flavour: 
-        kind: python-code
-        interpreter_binary: python3
-          #image:
-          #_use: vars.cult-cargo.images
-          #name: casa6
-      command: |
-        from casacore.tables import taql
-        taql(f"UPDATE {ms}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'")
-
-      inputs:
-        ms:
-          dtype: MS
-          must_exist: true
-          info: "Measurement set name"
-
 
 tart-image:
     info: TART calibration and imaging using stimela
@@ -118,11 +101,6 @@ tart-image:
                skip-celestial-source-catalog: true
                write-model-catalog: true
                model-catalog-name-prefix: =recipe.msdir + "/model_sources_"
-
-        updateobservatory:
-          cab: update-observatory-name
-          params:
-            ms: =recipe.ms
 
         flagsave:
             cab: casa.flagman
