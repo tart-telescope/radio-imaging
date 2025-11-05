@@ -66,7 +66,7 @@ source ./venv/bin/activate
 
 pip install --upgrade pip
 pip install tart-cargo
-pip install cult-cargo
+pip install git+https://github.com/caracal-pipeline/cult-cargo
 
 
 echo "Preloading singularity images"
