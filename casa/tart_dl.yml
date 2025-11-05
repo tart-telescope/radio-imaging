@@ -10,8 +10,8 @@ _include:
     - (cultcargo):
         - wsclean.yml
         - casa:
-            - flag.yml
             - listobs.yml
+            - flag.yml
             - calibration.yml
             - plotms.yml
             - plotants.yml
@@ -27,6 +27,18 @@ cabs:
           positional: true
         info: "Directory name"
 
+  update-observatory-name:
+      flavour:
+        kind: python-code
+        interpreter_binary: python3
+      command: |
+        from casacore.tables import taql
+        taql(f"UPDATE {ms}::OBSERVATION SET TELESCOPE_NAME='MeerKAT'")
+      inputs:
+        ms:
+          dtype: MS
+          must_exist: true
+          info: "Measurement set name"
 
 tart-image:
     info: TART calibration and imaging using stimela
@@ -51,9 +63,6 @@ tart-image:
         msdir:
           dtype: str
           default: msdir
-        do_download:
-          dtype: bool
-          default: false
 
     outputs:
         ms:
@@ -81,6 +90,7 @@ tart-image:
           cab: mkdir
           params:
             dirname: =recipe.msdir
+
         download-hdf:
             cab: tart-download-data
             params:
@@ -88,19 +98,26 @@ tart-image:
                 vis: true
                 n: =recipe.raw_data_nfile
                 dir: =recipe.h5dir
-            skip: =recipe.do_download!=true
+
         create-ms:
             cab: tart2ms
+            skip: =EXISTS(recipe.ms)
             params:
                hdf: =GLOB('{recipe.h5dir}/*.hdf')
                ms: =recipe.ms
                clobber: true
                rephase: obs-midpoint
+               single-field: true
                add-model: true
                uncalibrated: false
                skip-celestial-source-catalog: true
                write-model-catalog: true
                model-catalog-name-prefix: =recipe.msdir + "/model_sources_"
+
+        updateobservatory:
+          cab: update-observatory-name
+          params:
+            ms: =recipe.ms
 
         flagsave:
             cab: casa.flagman
