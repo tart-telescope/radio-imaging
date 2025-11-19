@@ -1,3 +1,5 @@
+*.svg
+*.sphere
 venv
 log*.txt
 *.deps
