@@ -17,15 +17,15 @@ _include:
             - plotants.yml
 
 cabs:
-  mkdir:
-    command: /bin/mkdir -p 
-    inputs:
-      dirname:
-        dtype: Directory
-        must_exist: false
-        policies:
-          positional: true
-        info: "Directory name"
+  # mkdir:
+  #   command: /bin/mkdir -p
+  #   inputs:
+  #     dirname:
+  #       dtype: Directory
+  #       must_exist: false
+  #       policies:
+  #         positional: true
+  #       info: "Directory name"
 
   update-observatory-name:
       flavour:
@@ -48,51 +48,43 @@ tart-image:
             dtype: str
             required: true
             info: "TART name (e.g. mu-udm)"
-        imgdir:
-          dtype: str
-          default: img
-        h5dir:
-          dtype: str
-          default: rawdata
+
         raw_data_nfile:
           dtype: str
           default: 10 # can be negative e.g. -30 to make this pause and actively download for 30 mins at curent accumulation rates set on TARTs
-        cal_table_dir:
-          dtype: str
-          default: caltables
-        msdir:
-          dtype: str
-          default: msdir
+
 
     outputs:
         ms:
           dtype: MS
           default:  '{current.msdir}/{current.tart}.ms'
 
+        imgdir:
+          dtype: Directory
+          mkdir: true
+          default: img
+        h5dir:
+          dtype: Directory
+          mkdir: true
+          default: rawdata
+        cal_table_dir:
+          dtype: Directory
+          mkdir: true
+          default: caltables
+        msdir:
+          dtype: Directory
+          mkdir: true
+          default: msdir
+
     assign:
         api: 'https://api.elec.ac.nz/tart/{recipe.tart}'
 
 
     steps:
-        initimgdir:
-          cab: mkdir
-          params:
-            dirname: =recipe.imgdir
-        initdatadownloaddir:
-          cab: mkdir
-          params:
-            dirname: =recipe.h5dir
-        initdatacaltabledir:
-          cab: mkdir
-          params:
-            dirname: =recipe.cal_table_dir
-        initmsdir:
-          cab: mkdir
-          params:
-            dirname: =recipe.msdir
 
         download-hdf:
             cab: tart-download-data
+            skip: =EXISTS(recipe.ms)
             params:
                 api: =recipe.api
                 vis: true
@@ -230,6 +222,7 @@ tart-image:
             cab: disko
             params:
                 ms: =recipe.ms
+                column: CORRECTED_DATA
                 HDF: ='{recipe.tart}-disko.sphere'
                 nvis: 10000
                 healpix: true
