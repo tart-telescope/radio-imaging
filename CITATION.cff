@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Molteno"
+  given-names: "Timothy C.A."
+  orcid: "https://orcid.org/0000-0002-2022-0380"
+- family-names: "Hugo"
+  given-names: "Benjamin A."
+  orcid: "https://orcid.org/0000-0002-2933-9134"
+title: "TART radio imaging  pipelinesdata"
+version: 1.0 
+date-released: 2026-02-16
+url: "https://github.com/tart-telescope/radio-imaging"
