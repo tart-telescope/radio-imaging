@@ -1,7 +1,7 @@
 TART=mu-udm
 
 all:
-	TMPDIR=~/tmp stimela run tart_cal_casa.yml tart=${TART}
+	APPTAINER_TMPDIR=~/tmp stimela run tart_cal_casa.yml tart=${TART}
 
 clean:
 	rm -rf img rawdata caltables msdir
