@@ -1,6 +1,6 @@
 TART=ghana
 
-all:
+data:
 	APPTAINER_TMPDIR=~/tmp stimela run process-data.yml tart=${TART}
 
 casa:
