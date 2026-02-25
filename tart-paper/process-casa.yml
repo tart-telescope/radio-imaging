@@ -13,6 +13,7 @@ _include:
         - tart-download-data.yml
         - disko.yml
         - disko-draw.yml
+        - spotless.yml
     - (cultcargo):
         - wsclean.yml
         - casa:
@@ -207,6 +208,27 @@ tart-image-casa:
                     - =steps.calibrate_phase.caltable
                 flagbackup: true
                 #calwt: [false,false]
+
+        spotless-image:
+            cab: spotless
+            params:
+                ms: =recipe.ms
+                HDF: ='{recipe.imgdir}/{recipe.tart}-spotless.sphere'
+                nvis: 10000
+                multimodel: true
+                healpix: true
+                fov: 170deg
+                res: 0.5deg
+                field: 0
+                column: CORRECTED_DATA
+
+        spotless-draw:
+            cab: disko-draw
+            params:
+                hdf: =steps.spotless-image.HDF
+                show-sources: true
+                scale-mad: true
+                SVG: ='spotless-{recipe.svg}'
 
         snapshotimage:
             cab: wsclean      
