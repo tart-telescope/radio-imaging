@@ -209,11 +209,11 @@ tart-image-casa:
                 flagbackup: true
                 #calwt: [false,false]
 
-        spotless-image:
+        spotless-image-corrected:
             cab: spotless
             params:
                 ms: =recipe.ms
-                HDF: ='{recipe.imgdir}/{recipe.tart}-spotless.sphere'
+                HDF: ='{recipe.imgdir}/{recipe.tart}-corrected-spotless.sphere'
                 nvis: 10000
                 multimodel: true
                 healpix: true
@@ -222,13 +222,35 @@ tart-image-casa:
                 field: 0
                 column: CORRECTED_DATA
 
-        spotless-draw:
+        spotless-draw-corrected:
             cab: disko-draw
             params:
-                hdf: =steps.spotless-image.HDF
+                hdf: =steps.spotless-image-corrected.HDF
                 show-sources: true
                 scale-mad: true
-                SVG: ='spotless-{recipe.svg}'
+                SVG: ='{recipe.imgdir}/{recipe.tart}-corrected-spotless.svg'
+
+        # Now image the original DATA column
+        spotless-image-data:
+            cab: spotless
+            params:
+                ms: =recipe.ms
+                HDF: ='{recipe.imgdir}/{recipe.tart}-data-spotless.sphere'
+                nvis: 10000
+                multimodel: true
+                healpix: true
+                fov: 170deg
+                res: 0.5deg
+                field: 0
+                column: DATA
+
+        spotless-draw-data:
+            cab: disko-draw
+            params:
+                hdf: =steps.spotless-image-data.HDF
+                show-sources: true
+                scale-mad: true
+                SVG: ='{recipe.imgdir}/{recipe.tart}-data-spotless.svg'
 
         snapshotimage:
             cab: wsclean      
