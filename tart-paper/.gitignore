@@ -2,5 +2,6 @@ venv
 img
 logs
 caltables
+*.lock
 *.flagversions
 *.json

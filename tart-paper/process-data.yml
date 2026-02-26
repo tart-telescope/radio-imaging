@@ -77,10 +77,13 @@ tart-image:
                 weight: briggs 0.0
                 intervals-out: 1
                 gain: 0.1
-                mgain: 0.9
+                mgain: 0.85
                 niter: 5000
-                auto-mask: 3
+                auto-mask: 1.5
+                auto-threshold: 1
                 no-update-model-required: true
+                no-fast-subminor: true
+                no-min-grid-resolution: true
 
 
         spotless-image:
