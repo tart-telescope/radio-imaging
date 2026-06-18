@@ -6,6 +6,9 @@ data:
 casa:
 	APPTAINER_TMPDIR=~/tmp stimela run process-casa.yml tart=${TART}
 
+spotless:
+	APPTAINER_TMPDIR=~/tmp stimela run spotless-comparison.yml tart=${TART}
+
 clean:
 # 	rm -rf *${TART}* msdir rawdata
 	rm -rf img caltables
