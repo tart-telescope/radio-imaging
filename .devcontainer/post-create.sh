@@ -65,7 +65,7 @@ python -m venv venv
 source ./venv/bin/activate
 
 pip install --upgrade pip
-pip install tart-cargo
+pip install --upgrade tart-cargo
 pip install git+https://github.com/caracal-pipeline/cult-cargo
 
 
