@@ -23,6 +23,10 @@ tart-image:
             dtype: str
             required: true
             info: "TART name (e.g. mu-udm)"
+        data_column:
+            dtype: str
+            default: DATA
+            info: "Measurement set column to image (e.g. DATA or CORRECTED_DATA)"
 
     outputs:
         ms:
@@ -62,6 +66,7 @@ tart-image:
             cab: spotless
             params:
                 ms: =recipe.ms
+                column: =recipe.data_column
                 HDF: ='{recipe.tart}-spotless.sphere'
                 nvis: 10000
                 multimodel: true
@@ -81,6 +86,7 @@ tart-image:
             cab: disko
             params:
                 ms: =recipe.ms
+                column: =recipe.data_column
                 HDF: ='{recipe.tart}-disko.sphere'
                 nvis: 10000
                 healpix: true
