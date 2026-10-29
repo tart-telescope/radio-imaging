@@ -19,3 +19,20 @@ Install the required packages
 By default these will use the TART telescope at the 'ghana' endpoint. To use a different TART, eg mu-udm. Try
 
     make data TART=mu-udm
+
+### Note on the bundled data
+
+The `ghana.ms` measurement set checked into this directory is stale: its
+`table.dat` no longer matches its column files, so WSClean fails with
+`TiledStMan::headerFileGet: mismatch in #row`. Regenerate it from the bundled
+HDF file before running `make data`:
+
+    rm -rf ghana.ms
+    make data
+
+`make casa` uses `msdir/ghana.ms`, which is valid and already has the
+`MODEL_DATA` column needed by the calibration steps.
+
+The imaging recipes use `nvis: 10000`. `disko` can exhaust the memory of a
+16 GB machine at that setting; lower the `nvis` values in `process-data.yml`
+if needed.

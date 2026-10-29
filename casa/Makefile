@@ -1,4 +1,4 @@
-TART=mu-udm
+TART=ghana
 
 all:
 	APPTAINER_TMPDIR=~/tmp stimela run tart_cal_casa.yml tart=${TART}

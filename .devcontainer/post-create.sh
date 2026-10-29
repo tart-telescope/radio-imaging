@@ -59,6 +59,9 @@ apptainer --version
 # Required for casa plotms
 sudo mkdir -p /run/user
 
+# Directory used by the Makefiles as APPTAINER_TMPDIR
+mkdir -p "$HOME/tmp"
+
 # Upgrade pip
 
 python -m venv venv
@@ -72,8 +75,8 @@ pip install git+https://github.com/caracal-pipeline/cult-cargo
 echo "Preloading singularity images"
 
 # Both recipes require a TART name to validate; any TART will do for building.
-stimela build ./basics/simple_recipe.yml tart=mu-udm
-stimela build ./casa/tart_cal_casa.yml tart=mu-udm
+stimela build ./basics/simple_recipe.yml tart=ghana
+stimela build ./casa/tart_cal_casa.yml tart=ghana
 
 deactivate
 
@@ -83,5 +86,5 @@ echo "================================================"
 echo ""
 echo "To get started:"
 echo "  1. Activate the environment: source ./venv/bin/activate"
-echo "  2. Run a recipe: cd basics && stimela run simple_recipe.yml tart=mu-udm"
+echo "  2. Run a recipe: cd basics && stimela run simple_recipe.yml tart=ghana"
 echo ""

@@ -6,7 +6,7 @@ This directory contains the GitHub Codespaces / VS Code Dev Container configurat
 
 The devcontainer provides:
 - **Ubuntu base** (Debian Bookworm via Python 3.12 image)
-- **Python 3.12** with pip and poetry
+- **Python 3.12** with pip
 - **Apptainer** (container runtime for radio astronomy tools)
 - **System dependencies**: squashfuse, fuse2fs, fuse3, gocryptfs
 - **VS Code extensions**: Python, Pylance
@@ -32,20 +32,20 @@ The devcontainer provides:
 
 The post-create script automatically:
 - Installs Apptainer and dependencies
-- Sets up Python environment with poetry
-- Installs tart_cargo dependencies
+- Creates a Python virtual environment in `venv`
+- Installs `stimela`, `tart-cargo` and `cult-cargo`
 
 You can then use tart-cargo:
 
 ```bash
-# Activate the poetry environment
-poetry shell
+# Activate the virtual environment
+source venv/bin/activate
 
-# Or run directly
-poetry run stimela --help
+# Check stimela is available
+stimela --help
 
 # Run an example recipe
-poetry run stimela run test/example_recipe.yml tart=mu-udm
+stimela run basics/simple_recipe.yml tart=ghana
 ```
 
 ## Verifying Installation
@@ -59,8 +59,9 @@ python --version  # Should show Python 3.12.x
 # Check Apptainer
 apptainer --version  # Should show Apptainer version
 
-# Check poetry
-poetry --version
+# Check stimela
+source venv/bin/activate
+stimela --version
 ```
 
 ## Troubleshooting
@@ -74,9 +75,11 @@ If you encounter issues:
 
 2. **Permission issues**: The container runs with `--privileged` flag to support apptainer operations
 
-3. **Dependencies not installed**: Manually run:
+3. **Dependencies not installed**: Re-run the setup script, or manually run:
    ```bash
-   poetry install
+   source venv/bin/activate
+   pip install --upgrade tart-cargo
+   pip install git+https://github.com/caracal-pipeline/cult-cargo
    ```
 
 ## Customization

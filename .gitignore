@@ -4,3 +4,6 @@ venv
 log*.txt
 *.deps
 *.png
+stimela.stats.*
+stimela.config.deps
+stimela.recipe.deps
