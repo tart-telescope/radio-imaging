@@ -181,8 +181,7 @@ tart-image:
               yaxis: 'gainphase'
               overwrite: true
               plotfile: '{recipe.cal_table_dir}/gainphase.tart.png'
-              iteraxis: 'antenna'
-              exprange: 'all'
+              coloraxis: 'antenna1'
 
                 #   flagfaults:
                 #       cab: casa.flagdata
@@ -218,8 +217,11 @@ tart-image:
               auto-mask: 5
               no-update-model-required: true
 
+        # The DiSkO steps need tens of GB of memory on ten minutes of data, more than a
+        # Codespace has, so they are skipped by default. Run them with -s disko-image,disko-draw
         disko-image:
             cab: disko
+            skip: true
             params:
                 ms: =recipe.ms
                 column: CORRECTED_DATA
@@ -234,6 +236,7 @@ tart-image:
 
         disko-draw:
             cab: disko-draw
+            skip: true
             params:
                 hdf: ='{recipe.tart}-disko.sphere'
                 show-sources: true

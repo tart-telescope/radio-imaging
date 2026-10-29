@@ -71,8 +71,9 @@ pip install git+https://github.com/caracal-pipeline/cult-cargo
 
 echo "Preloading singularity images"
 
-stimela build ./basics/simple_recipe.yml
-stimela build ./casa/tart_dl.yml
+# Both recipes require a TART name to validate; any TART will do for building.
+stimela build ./basics/simple_recipe.yml tart=mu-udm
+stimela build ./casa/tart_cal_casa.yml tart=mu-udm
 
 deactivate
 
@@ -81,5 +82,6 @@ echo "Setup complete! You can now use tart-cargo."
 echo "================================================"
 echo ""
 echo "To get started:"
-echo "  1. Run a recipe: poetry run stimela run basics/example_recipe.yml tart=mu-udm"
+echo "  1. Activate the environment: source ./venv/bin/activate"
+echo "  2. Run a recipe: cd basics && stimela run simple_recipe.yml tart=mu-udm"
 echo ""
