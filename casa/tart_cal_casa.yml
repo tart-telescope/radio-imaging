@@ -217,26 +217,27 @@ tart-image:
               auto-mask: 5
               no-update-model-required: true
 
-        # The DiSkO steps need tens of GB of memory on ten minutes of data, more than a
-        # Codespace has, so they are skipped by default. Run them with -s disko-image,disko-draw
+        # DiSkO builds a dense matrix of about 100 bytes x nvis x pixels. TART resolves
+        # about 3.5 deg, so 1 deg pixels (HEALPix nside 64) are plenty, and a 120 deg
+        # field (elevation above 30 deg) has ~12k of them: about 2.6 GB at nvis 2000.
+        # More visibilities hardly change the image. (0.5 deg over 170 deg with
+        # nvis 10000 needed ~57 GB.)
         disko-image:
             cab: disko
-            skip: true
             params:
                 ms: =recipe.ms
                 column: CORRECTED_DATA
                 HDF: ='{recipe.tart}-disko.sphere'
-                nvis: 10000
+                nvis: 2000
                 healpix: true
-                fov: 170deg
-                res: 0.5deg
+                fov: 120deg
+                res: 1deg
                 lasso: true
                 alpha: 0.006
                 l1-ratio: 0.02
 
         disko-draw:
             cab: disko-draw
-            skip: true
             params:
                 hdf: ='{recipe.tart}-disko.sphere'
                 show-sources: true
