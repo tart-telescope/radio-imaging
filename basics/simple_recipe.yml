@@ -68,7 +68,7 @@ tart-image:
                 ms: =recipe.ms
                 column: =recipe.data_column
                 HDF: ='{recipe.tart}-spotless.sphere'
-                nvis: 10000
+                nvis: 1000
                 multimodel: true
                 healpix: true
                 fov: 170deg
@@ -88,7 +88,7 @@ tart-image:
                 ms: =recipe.ms
                 column: =recipe.data_column
                 HDF: ='{recipe.tart}-disko.sphere'
-                nvis: 10000
+                nvis: 1000
                 healpix: true
                 fov: 170deg
                 res: 0.5deg
